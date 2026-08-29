@@ -49,7 +49,7 @@ export const NavBar: React.FC<NavBarProps> = ({ capabilities }) => {
         <div className="flex flex-1 flex-wrap items-center justify-end gap-1">
           {visibleItems.map((item) => {
             const isActive = item.path === '/' 
-              ? location.pathname === '/' 
+              ? location.pathname === '/' || location.pathname.startsWith('/conversations/')
               : location.pathname.startsWith(item.path);
             
             return (

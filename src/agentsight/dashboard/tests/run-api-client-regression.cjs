@@ -27,6 +27,7 @@ try {
       'react-jsx',
       '--esModuleInterop',
       'src/utils/apiClient.ts',
+      'src/utils/navigation.ts',
       'src/utils/containmentLifecycle.ts',
       'src/utils/datetime.ts',
       'src/utils/accuracyAttribution.ts',
@@ -39,6 +40,7 @@ try {
   execFileSync('node', ['--test', 'tests/apiClient-regression.test.cjs'], {
     env: {
       ...process.env,
+      AGENTSIGHT_NAVIGATION_BUILD: join(outputDir, 'utils', 'navigation.js'),
       AGENTSIGHT_API_CLIENT_BUILD: join(outputDir, 'utils', 'apiClient.js'),
       AGENTSIGHT_CONTAINMENT_LIFECYCLE_BUILD: join(outputDir, 'utils', 'containmentLifecycle.js'),
       AGENTSIGHT_DATETIME_BUILD: join(outputDir, 'utils', 'datetime.js'),
