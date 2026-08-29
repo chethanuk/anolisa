@@ -16,9 +16,11 @@ import { SystemAuditPage } from './pages/SystemAuditPage';
 import { LoginPage } from './pages/LoginPage';
 import { useI18n } from './i18n';
 import { fetchAuthStatus, fetchAuthVerify, login } from './utils/apiClient';
+import { defaultPath, pathAllowed } from './utils/navigation';
 import type { AppCapability, AuthStatusResponse } from './utils/apiClient';
 
 const DEFAULT_CAPABILITIES: AppCapability[] = [
+  'agent_health',
   'agent_observability',
   'sessions',
   'token_savings',
@@ -29,32 +31,10 @@ const DEFAULT_CAPABILITIES: AppCapability[] = [
   'enforcement',
   'atif',
   'settings',
-  'agent_health',
 ];
-
-const LOCAL_DEFAULT_PATH = '/sessions';
 
 function capabilitiesFromStatus(status: AuthStatusResponse | null): AppCapability[] {
   return Array.isArray(status?.capabilities) ? status.capabilities : DEFAULT_CAPABILITIES;
-}
-
-function pathAllowed(pathname: string, capabilities: AppCapability[]): boolean {
-  if (pathname === '/') return capabilities.includes('agent_observability');
-  if (pathname.startsWith('/sessions')) return capabilities.includes('sessions');
-  if (pathname.startsWith('/savings')) return capabilities.includes('token_savings');
-  if (pathname.startsWith('/optimization')) return capabilities.includes('optimization');
-  if (pathname.startsWith('/skills')) return capabilities.includes('skills');
-  if (pathname.startsWith('/security')) return capabilities.includes('security');
-  if (pathname.startsWith('/audit')) return capabilities.includes('system_audit');
-  if (pathname.startsWith('/enforcement')) return capabilities.includes('enforcement');
-  if (pathname.startsWith('/atif')) return capabilities.includes('atif');
-  if (pathname.startsWith('/settings')) return capabilities.includes('settings');
-  if (pathname.startsWith('/health')) return capabilities.includes('agent_health');
-  return true;
-}
-
-function defaultPath(capabilities: AppCapability[]): string {
-  return capabilities.includes('agent_observability') ? '/' : LOCAL_DEFAULT_PATH;
 }
 
 /** Auth gate: checks auth status and renders LoginPage when needed. */

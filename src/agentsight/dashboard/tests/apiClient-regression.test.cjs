@@ -2,6 +2,10 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const {
+  defaultPath,
+  pathAllowed,
+} = require(process.env.AGENTSIGHT_NAVIGATION_BUILD);
+const {
   containmentTargetCandidates,
   defaultContainmentTargetPid,
   enforcementSupportsContainment,
@@ -418,4 +422,20 @@ test('fixLocusLabel translates only the sentinel value', () => {
   assert.equal(fixLocusLabel('无', t), 'None');
   assert.equal(fixLocusLabel('Skill', t), 'Skill');
   assert.equal(fixLocusLabel('Context-policy', t), 'Context-policy');
+});
+
+test('defaultPath selects the priority capability path and falls back correctly', () => {
+  assert.equal(defaultPath(['agent_health']), '/health');
+  assert.equal(defaultPath(['agent_observability']), '/');
+  assert.equal(defaultPath(['agent_health', 'agent_observability']), '/health');
+  assert.equal(defaultPath([]), '/sessions');
+});
+
+test('pathAllowed validates route capabilities correctly', () => {
+  assert.equal(pathAllowed('/health', ['agent_health']), true);
+  assert.equal(pathAllowed('/health', ['agent_observability']), false);
+  assert.equal(pathAllowed('/', ['agent_observability']), true);
+  assert.equal(pathAllowed('/', []), false);
+  assert.equal(pathAllowed('/sessions', ['sessions']), true);
+  assert.equal(pathAllowed('/sessions', []), false);
 });
